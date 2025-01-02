@@ -66,7 +66,7 @@ export async function sendEmail(emailData: EmailData): Promise<void> {
     from: email,
     to: EMAIL_USER,
     subject: subject,
-    text: fullMessage,
+    html: fullMessage,
   };
 
   const transporter = createEmailTransporter();
