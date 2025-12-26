@@ -1,7 +1,7 @@
 import express from "express";
 import { urlencoded } from "body-parser";
 import { PORT } from "./constants";
-import { sendEmailController } from "./controller";
+import emailRouter from "./route";
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
-app.post("/send-email", sendEmailController);
+app.use("/email", emailRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
