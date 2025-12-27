@@ -1,7 +1,7 @@
 import express from "express";
 import { urlencoded } from "body-parser";
 import { PORT } from "./constants";
-import emailRouter from "./route";
+import emailRouter from "./app.route";
 
 const app = express();
 
