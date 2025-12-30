@@ -21,25 +21,21 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             $REPO_ROOT = ~/perso/email-sender/
+            echo "Checking if repo exists..."
             if [ ! -d "$REPO_ROOT" ]; then
               echo "Cloning repo..."
               cd ~/perso
-              git clone https://github.com/Nick-Lemy/email-sender.git
+              git clone https://github.com/Nick-Lemy/email-sender
             fi
+            echo "Navigating to repo..."
             cd $REPO_ROOT
 
-            # Pull latest changes
-            CHANGED_FILES=$(git pull origin main | grep -E 'Already')
-
-            if [! echo "$CHANGED_FILES" | grep -q "Already"]; then
-              echo "New changes on the repo, rebuilding app..."
-              cd ~/perso/email-sender
-              sudo docker stop email-sender || true
-              sudo docker rm email-sender || true
-              sudo docker build -t email-sender .
-              sudo docker run -d --name email-sender -p 4000:4000 email-sender
-            else
-              echo "No changes."
-            fi
+            echo "Pulling latest changes..."
+            git pull origin main
+            echo "Building and restarting Docker container..."
+            sudo docker stop email-sender || true
+            sudo docker rm email-sender || true
+            sudo docker build -t email-sender .
+            sudo docker run -d --name email-sender -p 4000:4000 email-sender
 
             exit 0
