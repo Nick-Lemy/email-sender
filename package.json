@@ -3,14 +3,19 @@
   "module": "app.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start:dev": "bun run nodemon --watch . --ext ts --exec 'bun run app.ts'"
+  },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "nodemon": "^3.1.11"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.2.1"
   }
 }
