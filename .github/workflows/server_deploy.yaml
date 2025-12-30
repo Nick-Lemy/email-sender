@@ -27,7 +27,7 @@ jobs:
               cd ~/perso
               git clone https://github.com/Nick-Lemy/email-sender
             fi
-            echo "Navigating to repo..."
+            echo "Navigating to repo... $REPO_ROOT"
             cd $REPO_ROOT
 
             echo "Pulling latest changes..."
