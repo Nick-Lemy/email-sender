@@ -20,15 +20,14 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            $REPO_ROOT = ~/perso/email-sender/
             echo "Checking if repo exists..."
-            if [ ! -d "$REPO_ROOT" ]; then
+            if [ ! -d "~/perso/email-sender" ]; then
               echo "Cloning repo..."
               cd ~/perso
               git clone https://github.com/Nick-Lemy/email-sender
             fi
-            echo "Navigating to repo... $REPO_ROOT"
-            cd $REPO_ROOT
+            echo "Navigating to repo... ~/perso/email-sender"
+            cd ~/perso/email-sender
 
             echo "Pulling latest changes..."
             git pull origin main
