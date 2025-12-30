@@ -36,5 +36,10 @@ jobs:
             sudo docker rm email-sender || true
             sudo docker build -t email-sender .
             sudo docker run -d --name email-sender -p 4000:4000 email-sender
-
+            if [ curl localhost:4000/health | grep "OK" ]; then
+              echo "Deployment successful and server is healthy."
+            else
+              echo "Deployment failed or server is unhealthy."
+              exit 1
+            fi
             exit 0
