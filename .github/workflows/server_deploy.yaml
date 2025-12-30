@@ -20,26 +20,70 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Checking if repo exists..."
-            if [ ! -d "~/perso/email-sender" ]; then
-              echo "Cloning repo..."
-              cd ~/perso
-              git clone https://github.com/Nick-Lemy/email-sender
-            fi
-            echo "Navigating to repo... ~/perso/email-sender"
-            cd ~/perso/email-sender
+            set -e
 
-            echo "Pulling latest changes..."
-            git pull origin main
-            echo "Building and restarting Docker container..."
-            sudo docker stop email-sender || true
-            sudo docker rm email-sender || true
-            sudo docker build -t email-sender .
-            sudo docker run -d --name email-sender -p 4000:4000 email-sender
-            if [ curl localhost:4000/health | grep "OK" ]; then
-              echo "Deployment successful and server is healthy."
+            log_section () {
+              echo ""
+              echo "=================================================="
+              echo "▶ $1"
+              echo "=================================================="
+            }
+
+            log_ok () {
+              echo "✔ SUCCESS: $1"
+            }
+
+            log_warn () {
+              echo "⚠ WARNING: $1"
+            }
+
+            log_fail () {
+              echo "✖ ERROR: $1"
+            }
+
+            log_section "DEPLOYMENT STARTED"
+
+            log_section "CHECKING REPOSITORY"
+            if [ ! -d "$HOME/perso/email-sender" ]; then
+              log_warn "Repository not found. Cloning..."
+              mkdir -p "$HOME/perso"
+              cd "$HOME/perso"
+              git clone https://github.com/Nick-Lemy/email-sender
+              log_ok "Repository cloned"
             else
-              echo "Deployment failed or server is unhealthy."
-              exit 1
+              log_ok "Repository already exists"
             fi
-            exit 0
+
+            log_section "UPDATING CODE"
+            cd "$HOME/perso/email-sender"
+            git pull origin main
+            log_ok "Latest code pulled"
+
+            log_section "DOCKER DEPLOYMENT"
+            sudo docker stop email-sender || log_warn "Container not running"
+            sudo docker rm email-sender || log_warn "Container not found"
+            sudo docker build -t email-sender .
+            log_ok "Docker image built"
+
+            sudo docker run -d --name email-sender -p 4000:4000 email-sender
+            log_ok "Container started"
+
+            log_section "HEALTH CHECK"
+            for i in {1..10}; do
+              echo "→ Health check attempt $i/10"
+              if curl -sf localhost:4000/health | grep -q "OK"; then
+                log_ok "Service is healthy"
+                log_section "DEPLOYMENT COMPLETED SUCCESSFULLY"
+                exit 0
+              fi
+              sleep 3
+            done
+
+            log_fail "Service failed health check after multiple attempts"
+            echo ""
+            echo "---- Last container logs ----"
+            sudo docker logs email-sender || true
+            echo "-----------------------------"
+
+            log_section "DEPLOYMENT FAILED"
+            exit 1
