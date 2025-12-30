@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start:dev": "bun run nodemon --watch . --ext ts --exec 'bun run app.ts'"
+    "start:dev": "bun run nodemon --watch . --ext ts --exec 'bun run app.ts'",
+    "start": "bun run app.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
