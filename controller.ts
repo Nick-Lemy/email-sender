@@ -3,22 +3,35 @@ import { createTransport } from "nodemailer";
 import { EMAIL_HOST, EMAIL_PASS, EMAIL_PORT, EMAIL_USER } from "./constants";
 
 export function sendEmailController(req: Request, res: Response) {
-  const { to, subject, body } = req.body;
+  const { fullName, email, subject, message } = req.body;
 
-  // TODO: Implement email sending logic here
-  // set up transporter
   const transporter = createTransport({
     service: "Gmail",
     host: EMAIL_HOST,
     port: Number(EMAIL_PORT),
     secure: true,
     auth: {
-      user: EMAIL_USER, // the email you used to create app password
-      pass: EMAIL_PASS, // your generated app password
+      user: EMAIL_USER,
+      pass: EMAIL_PASS,
     },
   });
 
-  console.log(`Sending email to: ${to}, subject: ${subject}, body: ${body}`);
+  const fullMessage = `Sender's email: ${email}\nFullName: ${fullName}\nSubject: ${subject}\nMessage: ${message}`;
 
-  res.status(200).send({ message: "Email sent successfully" });
+  console.log("full", fullMessage);
+  const mailOptions = {
+    from: email,
+    to: EMAIL_USER,
+    subject: subject,
+    text: fullMessage,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      res.status(500).send({ message: "Error sending email" });
+    } else {
+      console.log("Email sent:", info.response);
+      res.status(200).send({ message: "Email sent successfully" });
+    }
+  });
 }
