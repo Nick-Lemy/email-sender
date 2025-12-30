@@ -10,4 +10,4 @@ EXPOSE 4000
 
 COPY . .
 
-CMD [ "bun", "run", "start" ]
+CMD [ "bun", "run", "start:prod" ]
