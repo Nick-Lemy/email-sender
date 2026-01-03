@@ -1,6 +1,13 @@
 import { createTransport } from "nodemailer";
-import { EMAIL_HOST, EMAIL_PASS, EMAIL_PORT, EMAIL_USER } from "./constants";
+import {
+  EMAIL_HOST,
+  EMAIL_PASS,
+  EMAIL_PORT,
+  EMAIL_RECIPIENT,
+  EMAIL_USER,
+} from "./constants";
 import type { EmailData } from "./types";
+import type Mail from "nodemailer/lib/mailer";
 
 const createEmailTransporter = () => {
   return createTransport({
@@ -62,9 +69,10 @@ export async function sendEmail(emailData: EmailData): Promise<void> {
 
   console.log("full", fullMessage);
 
-  const mailOptions = {
+  const mailOptions: Mail.Options = {
     from: email,
-    to: EMAIL_USER,
+    to: EMAIL_RECIPIENT,
+    replyTo: email,
     subject: subject,
     html: fullMessage,
   };
