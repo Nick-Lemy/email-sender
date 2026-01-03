@@ -67,8 +67,6 @@ export async function sendEmail(emailData: EmailData): Promise<void> {
   </div>
 `;
 
-  console.log("full", fullMessage);
-
   const mailOptions: Mail.Options = {
     from: email,
     to: EMAIL_RECIPIENT,
