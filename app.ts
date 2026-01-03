@@ -2,9 +2,11 @@ import express from "express";
 import { urlencoded } from "body-parser";
 import { PORT } from "./constants";
 import emailRouter from "./app.route";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
