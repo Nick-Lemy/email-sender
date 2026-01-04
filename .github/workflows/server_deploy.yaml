@@ -71,7 +71,7 @@ jobs:
             log_section "HEALTH CHECK"
             for i in {1..10}; do
               echo "→ Health check attempt $i/10"
-              if curl -sf localhost:4000/health | grep -q "OK"; then
+              if curl -sf localhost/health | grep -q "OK"; then
                 log_ok "Service is healthy"
                 log_section "DEPLOYMENT COMPLETED SUCCESSFULLY"
                 exit 0
