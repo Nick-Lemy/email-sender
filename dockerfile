@@ -6,7 +6,7 @@ COPY bun.lock .
 COPY package.json .
 RUN bun install --frozen-lockfile
 
-EXPOSE 4000
+EXPOSE 80
 
 COPY . .
 

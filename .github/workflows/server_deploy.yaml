@@ -65,7 +65,7 @@ jobs:
             sudo docker build -t email-sender .
             log_ok "Docker image built"
 
-            sudo docker run -d --name email-sender -p 4000:4000 email-sender
+            sudo docker run -d --name email-sender -p 80:80 email-sender
             log_ok "Container started"
 
             log_section "HEALTH CHECK"
