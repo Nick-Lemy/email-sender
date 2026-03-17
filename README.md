@@ -1,6 +1,6 @@
 # email-sender
 
-Simple Express email sender with nodemailer, to try bun
+Simple Express email sender with nodemailer
 
 # Installation
 
